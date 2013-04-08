@@ -1,7 +1,4 @@
-Bundler.require(:default)
-
-require 'torquebox-messaging'
-require_relative './../initializer'
+require_relative '../cloud_manage'
 
 module CloudManage
   class MachineRefresh
@@ -14,7 +11,7 @@ module CloudManage
       Server.all.each do |server|
         next if server.is_deleted?
         next if server.is_new?
-        server.background.sync_attributes
+        server.background.refresh
       end
     end
 

@@ -1,0 +1,16 @@
+%h2="#{server.image.name} server"
+
+%p{ :class => 'pull-right'}
+  %a{ :class => 'btn btn-danger', :href => "/servers/#{server.id}/destroy" } Delete
+
+- show_model(server)
+
+%h3 Events
+
+%table.table.table-striped.table-bordered
+  %tbody
+    - server.events.reverse.each do |e|
+      %tr
+        %td=e.created_at
+        %td=e.severity
+        %td=e.message

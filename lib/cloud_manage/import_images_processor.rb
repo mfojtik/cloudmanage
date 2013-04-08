@@ -1,7 +1,4 @@
-Bundler.require(:default)
-
-require 'torquebox-messaging'
-require_relative './../initializer'
+require_relative '../cloud_manage'
 
 module CloudManage
 

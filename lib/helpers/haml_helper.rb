@@ -126,5 +126,12 @@ module CloudManage
       end
     end
 
+    def time_ago(time)
+      time = DateTime.parse(time.to_s).xmlschema
+      haml_tag :abbr, :class => :ago, :title => time do
+        haml_concat time
+      end
+    end
+
   end
 end

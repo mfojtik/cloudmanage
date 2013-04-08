@@ -1,43 +1,21 @@
-#
-# Initialize database connection
-#
-
-require 'logger'
-require_relative './core_ext/string'
-
+require 'rubygems'
+require 'bundler'
+Bundler.require
 
 module CloudManage
-
-  class CustomLogger < Logger
-    alias format_message_colorless format_message
-
-    def format_message(level, *args)
-      level_str = level == 'ERROR' ? level.light_red : level.light_magenta
-      "%-10s: %s %s\n" % [level_str, args[0].strftime("%H:%m:%S").light_green, args.last]
-    end
-  end
-
-  class JavaLogger < TorqueBox::Logger; end
-
-  def self.logger
-    if RUBY_PLATFORM == 'java'
-      @logger ||= JavaLogger.new
-    else
-      @logger ||= CustomLogger.new($stdout)
-    end
-  end
+  module Models; end
 
   def self.connect
     if RUBY_PLATFORM == 'java'
       require 'torquebox/injectors' if RUBY_PLATFORM == 'java'
       ::Sequel.connect(
         'jdbc:sqlite:/home/mfojtik/code/cloudmanage/cm.sqlite',
-        :logger => logger
+        :logger => Logger.new($stdout)
       )
     else
       ::Sequel.connect(
         'sqlite://cm.sqlite',
-        :logger => logger
+        :logger => Loggeer.new($stdout)
       )
     end
   end
@@ -108,8 +86,18 @@ module CloudManage
 
 end
 
-DB = CloudManage.connect
-CloudManage.create_or_update_database!
+# Core extensions
+#
+require_relative './core_ext/string'
 
-require_relative './models'
-require_relative './controllers'
+# Initialize the database
+#
+DB = CloudManage.connect
+
+# Load Sequel Models
+#
+require_relative './cloud_manage/models/account'
+require_relative './cloud_manage/models/image'
+require_relative './cloud_manage/models/key'
+require_relative './cloud_manage/models/server'
+require_relative './cloud_manage/models/event'

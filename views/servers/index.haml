@@ -16,10 +16,13 @@
         %td
           %a{ :href => url("/servers/#{s.id}")}=s.instance_id
         %td
-          %a{ :href => url("/accounts/#{s.image.account.id}")}=s.image.account.name
+          %a{ :href => url("/accounts/#{s.image.account.id}")}
+            %small=s.image.account.name
         %td
-          %a{ :href => url("/images/#{s.image.id}")}=s.image.name
-        %td=s.address
+          %a{ :href => url("/images/#{s.image.id}")}
+            %small=s.image.name
+        %td
+          %small=s.address
         %td
           %span.label=s.state
         %td

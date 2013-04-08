@@ -10,9 +10,13 @@ TorqueBox.configure do
     processor CloudManage::CreateInstanceProcessor
   end
 
+  queue '/queues/destroy_instance' do
+    processor CloudManage::DestroyInstanceProcessor
+  end
+
   job CloudManage::MachineRefresh do
     name 'machine.refresh'
-    cron '0 */1 * * * ?'
+    cron '*/30 * * * * ?'
     timeout '50s'
     description 'Periodically checks for instance state changes'
   end

@@ -15,10 +15,15 @@ module CloudManage::Controllers
 
     get '/servers/:id/destroy' do
       server = Server[params['id']]
-      server.destroy
-      flash[:notice] = "Server #{server.image.name} has been deleted."
+      server.queue_destroy!
+      flash[:notice] = "Server #{server.image.name} is now being deleted."
       Event.create(:message => flash[:notice])
       redirect back
+    end
+
+    get '/servers/:id' do
+      server = Server[params['id']]
+      haml :'servers/show', :locals => { :server => server }
     end
 
   end

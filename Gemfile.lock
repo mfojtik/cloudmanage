@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/mifo/deltacloud-client.git
-  revision: e0c2aea7f05982ae1e0ba737ad4900a58611c333
+  revision: 7b4cf542791c5e0e2edc7f05ac70eecf3ed80c2a
   specs:
     deltacloud-client (1.1.2)
       faraday (>= 0.8.6)

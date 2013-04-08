@@ -1,0 +1,20 @@
+%h2 Events
+- pagination(events, "/events", :klass => [ 'pull-right'] )
+
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th Time
+      %th Category
+      %th Severity
+      %th Message
+  %tbody
+    - events.reverse.each do |e|
+      %tr
+        %td
+          - time_ago(e.created_at)
+        %td=e.kind
+        %td=e.severity
+        %td=e.message
+
+- pagination(events, "/events")
