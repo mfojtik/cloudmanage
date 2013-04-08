@@ -3,6 +3,7 @@ module CloudManage::Models
 
     many_to_one :account
     one_to_many :images
+    one_to_many :events
 
     plugin :timestamps,
       :create => :created_at, :update => :updated_at
@@ -18,7 +19,7 @@ module CloudManage::Models
       return :password
     end
 
-    def self.create_with_backend(create_opts={})
+    def self.create_or_update_key(create_opts={})
       existing_key_id = create_opts.delete('id')
       if existing_key_id
         Key[existing_key_id].update(create_opts)
@@ -26,7 +27,7 @@ module CloudManage::Models
         key = new(create_opts)
         DB.transaction do
           begin
-            backend_key = key.account.client.create_key(key.name.strip, :public_key => key.pem.strip)
+            backend_key = create_backend_key(key)
             key.update(:backend_id => backend_key._id)
             key.update(:pem => backend_key.pem) if key.pem.strip.empty?
             key.save
@@ -36,6 +37,17 @@ module CloudManage::Models
           end
         end
         key
+      end
+    end
+
+    private
+
+    def self.create_backend_key(key)
+      begin
+        key.account.client.create_key(key.name.strip, :public_key => key.pem.strip)
+      rescue => e
+        Event.create(:key_id => key.id, :message => "Unable to create key on backend #{e.message}")
+        false
       end
     end
 

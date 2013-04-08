@@ -21,8 +21,9 @@ module CloudManage
         if img.valid?
           begin
             img.save
+            img.add_event(:message => "Image succesfully imported #{img.image_id}")
           rescue => e
-            CloudManage.logger.error "#{img.id} could not be saved #{e.message}"
+            img.add_event(:severity => 'ERROR', :message => "Unable to import image #{img.image_id} (#{e.message})")
           end
         end
       end

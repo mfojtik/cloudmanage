@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/mifo/deltacloud-client.git
-  revision: 01d309feb2f1587a7d6d48b5481bfe26f2d7f7d7
+  revision: e0c2aea7f05982ae1e0ba737ad4900a58611c333
   specs:
     deltacloud-client (1.1.2)
       faraday (>= 0.8.6)
@@ -20,7 +20,7 @@ GEM
     eventmachine (1.0.3)
     faraday (0.8.7)
       multipart-post (~> 1.1)
-    haml (4.0.1)
+    haml (4.0.2)
       tilt
     i18n (0.6.1)
     jdbc-sqlite3 (3.7.2.1)

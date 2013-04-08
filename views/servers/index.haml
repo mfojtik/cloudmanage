@@ -1,13 +1,11 @@
 %h3="My Servers"
 
-- pagination(images, "/servers", :klass => [ 'pull-right' ])
+- pagination(servers, "/servers", :klass => [ 'pull-right' ])
 
 %table.table.table-striped.table-bordered
   %thead
     %tr
-      %th Server
       %th Instance
-      %th Provider
       %th Account
       %th Image
       %th IP Address
@@ -16,10 +14,7 @@
     - servers.each do |s|
       %tr
         %td
-          %a{ :href => url("/servers/#{s.id}")}=s.id
-        %td=s.instance_id
-        %td
-          %span{:class => 'label label-info'}=s.image.account.driver
+          %a{ :href => url("/servers/#{s.id}")}=s.instance_id
         %td
           %a{ :href => url("/accounts/#{s.image.account.id}")}=s.image.account.name
         %td
@@ -27,5 +22,7 @@
         %td=s.address
         %td
           %span.label=s.state
+        %td
+          %a{ :class => 'btn-danger btn', :href => "/servers/#{s.id}/destroy" } Delete
 
-- pagination(images, "/servers")
+- pagination(servers, "/servers")

@@ -10,4 +10,11 @@ TorqueBox.configure do
     processor CloudManage::CreateInstanceProcessor
   end
 
+  job CloudManage::MachineRefresh do
+    name 'machine.refresh'
+    cron '0 */1 * * * ?'
+    timeout '50s'
+    description 'Periodically checks for instance state changes'
+  end
+
 end

@@ -10,11 +10,22 @@ module CloudManage
 
     def on_message(server_id)
       server = Server[server_id]
-      image_id, create_opts = server.image.create_instance_args
+      if instance = create_backend_instance_from(server)
+        server.update(:instance_id => instance._id, :state => instance.state)
+        server.add_event(:message => "Machine successfully created")
+      end
+    end
+
+    private
+
+    def create_backend_instance_from(server)
       begin
-        instance = server.image.account.client.create_instance(image_id, create_opts)
-        image.update(:instance_id => instance._id)
-      rescue
+        image_id, create_opts = server.image.create_instance_args
+        server.image.account.client.create_instance(image_id, create_opts)
+      rescue => e
+        server.add_event(:severity => 'ERROR', :message => "Unable to create server (#{e.message})")
+        server.set_deleted!
+        false
       end
     end
 

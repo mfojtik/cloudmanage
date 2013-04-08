@@ -4,6 +4,7 @@ module CloudManage::Models
     many_to_one :account
     many_to_one :key
     one_to_many :servers
+    one_to_many :events
 
     plugin :timestamps,
       :create => :created_at, :update => :updated_at

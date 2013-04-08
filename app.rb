@@ -15,6 +15,7 @@ module CloudManage
     use CloudManage::Controllers::Accounts
     use CloudManage::Controllers::Images
     use CloudManage::Controllers::Keys
+    use CloudManage::Controllers::Servers
 
     get '/' do
       redirect url("/accounts")

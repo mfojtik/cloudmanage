@@ -31,7 +31,7 @@ module CloudManage
     if RUBY_PLATFORM == 'java'
       require 'torquebox/injectors' if RUBY_PLATFORM == 'java'
       ::Sequel.connect(
-        'jdbc:sqlite:cm.sqlite',
+        'jdbc:sqlite:/home/mfojtik/code/cloudmanage/cm.sqlite',
         :logger => logger
       )
     else
@@ -93,6 +93,16 @@ module CloudManage
       column      :address,       :string
       column      :updated_at,    :timestamp
       column      :created_at,    :timestamp
+    end
+    DB.create_table? :events do
+      primary_key :id
+      column      :server_id,  :integer, :index => true
+      column      :account_id, :integer, :index => true
+      column      :key_id,     :integer, :index => true
+      column      :image_id,   :integer, :index => true
+      column      :severity,   :string,  :default => 'INFO', :null => false
+      column      :message,    :string,  :size => 256
+      column      :created_at, :timestamp
     end
   end
 

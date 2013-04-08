@@ -2,7 +2,8 @@ module CloudManage
   module Models; end
 end
 
-require_relative './models/account'
-require_relative './models/image'
-require_relative './models/key'
-require_relative './models/server'
+require_relative './cloud_manage/models/account'
+require_relative './cloud_manage/models/image'
+require_relative './cloud_manage/models/key'
+require_relative './cloud_manage/models/server'
+require_relative './cloud_managemodels/event'

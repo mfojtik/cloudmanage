@@ -3,6 +3,7 @@ module CloudManage::Models
 
     one_to_many :images
     one_to_many :keys
+    one_to_many :events
 
     DELTACLOUD_URL = 'http://localhost:3001/api'
 
