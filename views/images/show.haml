@@ -1,0 +1,6 @@
+%h2="#{image.name} image"
+
+%p{ :class => 'pull-right'}
+  %a{ :class => 'btn', :href => url("/images/#{image.id}/edit") } Edit
+
+- show_model(image)

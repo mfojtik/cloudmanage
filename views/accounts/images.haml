@@ -1,0 +1,19 @@
+%h3="#{account.name} images"
+
+- pagination(images, "/accounts/#{account.id}/images", :klass => [ 'pull-right' ])
+
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th ID
+      %th Name
+      %th Description
+  %tbody
+    - images.each do |i|
+      %tr
+        %td
+          %a{ :href => url("/images/#{i.id}")}=i.image_id
+        %td=i.name
+        %td=i.description
+
+- pagination(images, "/accounts/#{account.id}/images")

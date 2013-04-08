@@ -1,0 +1,45 @@
+%h3 Launch #{image.name}
+
+%h4 Server Details
+
+
+
+%table.table.table-striped.table-bordered.summary
+  %tbody
+    %tr
+      %th Image
+      %td
+        %a{:href => url("/images/#{image.id}")}=image.name
+        %span.muted=" (#{image.description})"
+    %tr
+      %th Account
+      %td
+        %a{:href => url("/accounts/#{image.account.id}")}=image.account.name
+    %tr
+      %th Authentication Method
+      %td
+        ="#{image.key.kind}:#{image.key.username}@"
+        - if image.key.kind == :ssh
+          %a{ :href => url("/keys/#{image.key.id}")}=image.key.name
+        - else
+          = image.key.password
+    %tr
+      %th Status
+      %td
+        - if image.ready_for_launch?
+          %span.label.label-success READY
+        - else
+          %span.label.label-info PENDING
+
+%p.pull-right
+  %a{ :class => 'btn btn-success', :href => url("/servers/new?image_id=#{image.id}") } Continue
+
+%br
+
+%h4 Deltacloud Command
+
+%pre
+  %code="$ curl -X POST --user '#{image.account.username}:#{image.account.password}' \\"
+  %code="-H 'X-Deltacloud-Driver: #{image.account.driver}'\\"
+  %code="-H 'Accept: application/xml'\\"
+  %code="#{image.account.client.connection.build_url('',image.create_instance_args.last.merge(:image_id => image.create_instance_args.first))}"

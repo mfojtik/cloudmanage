@@ -1,0 +1,5 @@
+%h2="#{account.name} account"
+%p{ :class => 'pull-right'}
+  %a{ :class => 'btn', :href => "/accounts/#{account.id}/import" } Refresh Images
+
+- show_model(account)

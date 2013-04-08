@@ -1,0 +1,50 @@
+%h2="Edit #{image.name} (#{image.image_id})"
+
+- form_for image, '/images' do
+  - control_header 'Image Details'
+
+  - control_group 'Name' do
+    - input :text, :name
+
+  - control_group 'Description' do
+    - input :text, :description
+
+  - control_group :starred, 'Favorite Image?', :no_label => true do
+    - checkbox :starred
+
+  - control_header 'Image Authentication'
+
+  - control_group 'Authentication Key' do
+    - if (keys = image.account.keys).size == 0
+      %p
+        %a{ :class => 'btn btn-info', :href => "/keys/#{image.account.id}/new" } Create Keys
+    - else
+      - select :key_id, image.account.keys.map { |k| { k.id => k.name }}
+
+  - if image.account.client.support? 'firewalls'
+    - control_group 'Firewall' do
+      - select :firewall_id, image.account.firewalls
+
+  - control_header 'Sizing'
+
+  - control_group 'Hardware Profile' do
+    - select :hwp_id, image.account.hardware_profiles
+
+  %p.muted
+    Note: The sizing properties below are not applicable for all cloud providers:
+
+  - control_group 'Memory' do
+    - input :text, :hwp_memory
+
+  - control_group :hwp_cpu, 'CPU cores' do
+    - input :text, :hwp_cpu
+
+  - control_group 'Storage' do
+    - input :text, :hwp_storage
+
+  - control_header 'Placement'
+
+  - control_group :realm_id, 'Datacenter/Cluster' do
+    - select :realm_id, image.account.realms
+
+

@@ -1,0 +1,32 @@
+!!!5
+%html
+  %head
+    = bootstrap_assets
+    %link{ :rel => :stylesheet, :href => '/css/app.css', :type => 'text/css' }
+  %body
+    - container do
+      - row do
+        .span3.bs-docs-sidebar
+          %ul.nav.nav-list.affix.bs-docs-sidenav
+            %li
+              %a{ :href => '/accounts'}
+                %i.icon-chevron-right
+                My Accounts
+            %li
+              %a{ :href => '/images'}
+                %i.icon-chevron-right
+                My Images
+            %li
+              %a{ :href => '/servers'}
+                %i.icon-chevron-right
+                My Servers
+        - span9 do
+          - if flash[:error]
+            .alert
+              %strong Validation Error
+              %p=flash[:error]
+          - if flash[:notice]
+            .alert
+              %strong Info
+              %p=flash[:notice]
+          = yield

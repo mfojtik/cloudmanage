@@ -1,0 +1,33 @@
+%h3 Cloud Accounts
+
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th Name
+      %th Provider
+      %th API key
+      %td
+      %td
+  %tbody
+    - accounts.each do |a|
+      %tr
+        %td
+          %a{ :href => "/accounts/#{a.id}"}=a.name
+        %td=a.driver
+        %td=a.username
+        %td
+          - if (image_count = a.images.count) == 0
+            %a{ :class => 'btn btn-info', :href => "/accounts/#{a.id}/import" } Import Images
+          -else
+            %a{ :href => "/accounts/#{a.id}/images"}="#{image_count} image(s)"
+        %td
+          - if (key_count = a.keys.count) == 0
+            %a{ :class => 'btn btn-info', :href => "/keys/#{a.id}/new" } Create Keys
+          - else
+            %a{ :href => "/accounts/#{a.id}/keys" }="#{key_count} key(s)"
+        %td
+          %a{ :class => 'btn', :href => "/accounts/#{a.id}/edit" } Edit
+          %a{ :class => 'btn-danger btn', :href => "/accounts/#{a.id}/destroy" } Delete
+
+%p
+  %a{ :class => 'pull-right btn', :href => '/accounts/new'} New Account

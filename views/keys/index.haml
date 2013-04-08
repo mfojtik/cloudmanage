@@ -1,0 +1,26 @@
+%h3="#{account.name} Authentication Keys"
+
+%p{ :class => 'pull-right'}
+  %a{ :class => 'btn', :href => "/keys/#{account.id}/new" } Create Key
+
+- pagination(keys, "/account/#{account.id}/keys", :klass => [ 'pull-right' ])
+
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th Name
+      %th Type
+      %th Username
+      %td
+  %tbody
+    - keys.each do |k|
+      %tr
+        %td
+          %a{ :href => url("/keys/#{k.id}")}=k.name
+        %td=k.kind
+        %td=k.username
+        %td
+          %a{ :class => 'btn', :href => url("/keys/#{k.id}/edit") } Edit
+          %a{ :class => 'btn btn-danger', :href => url("/keys/#{k.id}/destroy") } Delete
+
+- pagination(keys, "/account/#{account.id}/keys")

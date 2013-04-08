@@ -1,0 +1,27 @@
+%h3="My Images"
+
+- pagination(images, "/images", :klass => [ 'pull-right' ])
+
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th Image ID
+      %th Account
+      %th Provider
+      %th Name
+  %tbody
+    - images.each do |i|
+      %tr
+        %td
+          %a{ :href => url("/images/#{i.id}")}=i.image_id
+        %td=i.account.name
+        %td
+          %span.label.label-info=i.account.driver
+        %td
+          %small=i.name
+        %td
+          - if i.ready_for_launch?
+            %a{ :class => 'btn btn-success', :href => url("/images/#{i.id}/launch") } Launch
+          %a{ :class => 'btn', :href => url("/images/#{i.id}/edit") } Edit
+
+- pagination(images, "/images")

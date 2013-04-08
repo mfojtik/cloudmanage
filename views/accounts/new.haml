@@ -1,0 +1,20 @@
+%h2 New Provider
+
+- form_for account, '/accounts' do
+  - control_header 'Provider details'
+  - control_group 'Name' do
+    - input :text, :name
+
+  - control_group 'Provider' do
+    - select :driver, account.drivers
+
+  - control_header 'Provider authentication details'
+
+  - control_group 'API Key' do
+    - input :text, :username
+
+  - control_group 'API Secret' do
+    - input :password, :password
+
+  - control_group 'Provider API URL' do
+    - input :text, :provider_url

@@ -1,0 +1,35 @@
+%h2="New Authentication Key for #{account.name}"
+
+- form_for key, '/keys' do
+
+  - input :hidden, :account_id
+
+  - control_header 'Keys details'
+  - control_group 'Name' do
+    - input :text, :name
+
+  - control_header 'Authentication'
+
+  %p
+    Note: These field are not required if backend provider
+    support SSH key creation. In that case values below will
+    be filled automatically after save.
+
+  - control_group 'Username' do
+    - input :text, :username
+
+  - control_group 'Password' do
+    - input :text, :password
+
+  - control_group :pem, 'Public SSH Key' do
+    - text :pem
+
+  - control_header 'Additional authentication'
+  %p
+    Additional commands to execute after succesfully SSH into machine
+    to gain the 'root' privileges.
+
+  - control_group :cmd, 'Command' do
+    - input :text, :cmd
+
+
