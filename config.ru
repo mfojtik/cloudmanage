@@ -1,10 +1,8 @@
-require "bundler/setup"
-Bundler.require(:default)
+$:.unshift File.join(File.dirname(__FILE__), 'lib')
 
 require 'cloud_manage'
-
-require_relative './lib/controllers'
-require_relative './lib/app'
+require 'controllers'
+require 'app'
 
 use Rack::Reloader
 run CloudManage::UI

@@ -9,8 +9,8 @@ module CloudManage
       redirect(back) && halt
     end
 
-    def cache
-      @cache ||= TorqueBox::Infinispan::Cache.new(:name => 'cloudmanage', :persist => '/data/cloudmanage')
+    def page
+      params['page'] ? params['page'].to_i : 1
     end
 
   end

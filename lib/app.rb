@@ -1,14 +1,11 @@
-require 'active_support/cache/torque_box_store'
-
 module CloudManage
   class UI < Sinatra::Base
     register Sinatra::Twitter::Bootstrap::Assets
 
-    use TorqueBox::Session::ServletStore
+    enable :sessions
+    set :public_folder, File.join(File.dirname(__FILE__), '../public')
+
     use Rack::Flash
-
-    set :cache, ActiveSupport::Cache::TorqueBoxStore.new
-
     use CloudManage::Controllers::Accounts
     use CloudManage::Controllers::Images
     use CloudManage::Controllers::Keys

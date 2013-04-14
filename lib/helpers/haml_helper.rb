@@ -100,6 +100,7 @@ module CloudManage
           haml_concat ''
         end
         options.each do |v|
+          p v.inspect
           value, label = v.to_a.first
           if selected and selected == value.to_s
             haml_tag :option, :value => value, :selected => :selected do

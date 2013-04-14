@@ -7,9 +7,9 @@ module CloudManage::Controllers
     end
 
     get '/servers/new' do
-      server = Server.create_from_image(params['image_id'])
-      flash[:notice] = "Server #{server.image.name} has been queued for launch."
-      server.add_event(:message => flash[:notice])
+      server = Server.create(:image_id => params[:image_id])
+      server.task.run(:server, :deploy, :server_id => server.id)
+      flash[:notice] = "Server ##{server.id} deployment started."
       redirect url("/servers")
     end
 

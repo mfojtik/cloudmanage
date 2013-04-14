@@ -36,7 +36,7 @@ module CloudManage::Controllers
 
     get '/accounts/:id/import' do
       account = Account[params[:id]]
-      account.import_images!
+      account.task.run(:image, :import, :account_id => account.id)
       flash[:notice] = "Importing backend images for #{account.name}. <a href='#{url('/accounts')}'>Refresh</a> at will."
       redirect back
     end

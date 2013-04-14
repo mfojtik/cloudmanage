@@ -22,7 +22,7 @@ module CloudManage::Controllers
 
     get '/images' do
       images = Image.where(
-        :starred => true).paginate((params[:page] ? params[:page].to_i : 1), 25)
+        :starred => true).paginate(page, 25)
       haml :'images/index', :locals => { :images => images }
     end
 

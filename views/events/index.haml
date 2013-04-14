@@ -1,5 +1,21 @@
-%h2 Events
-- pagination(events, "/events", :klass => [ 'pull-right'] )
+%h2 Events &amp; Tasks
+.pull-right=will_paginate events
+
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th Time
+      %th Model
+      %th Operation
+      %th State
+  %tbody
+    - tasks.each do |t|
+      %tr
+        %td
+          - time_ago(t.created_at)
+        %td=t.klass
+        %td=t.name
+        %td=t.state
 
 %table.table.table-striped.table-bordered
   %thead
@@ -9,7 +25,7 @@
       %th Severity
       %th Message
   %tbody
-    - events.reverse.each do |e|
+    - events.each do |e|
       %tr
         %td
           - time_ago(e.created_at)
@@ -17,4 +33,4 @@
         %td=e.severity
         %td=e.message
 
-- pagination(events, "/events")
+= will_paginate events
