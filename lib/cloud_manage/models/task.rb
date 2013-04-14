@@ -9,7 +9,6 @@ module CloudManage::Models
     plugin :association_dependencies,
       :events => :delete
 
-
     def self.run(klass_name, method, opts={})
       new_task = new(:klass => klass_name, :name => method, :params => JSON::dump(opts))
       if new_task.valid?

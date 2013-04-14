@@ -1,6 +1,5 @@
 module CloudManage::Models
   class Server < Sequel::Model
-    include TorqueBox::Messaging::Backgroundable
 
     plugin :timestamps,
       :create => :created_at, :update => :updated_at
@@ -8,38 +7,8 @@ module CloudManage::Models
     many_to_one :image
     one_to_many :events
 
-    def self.create_from_image(image_id)
-      server = Server.new(:image_id => image_id)
-      TorqueBox::Messaging::Queue.new('/queues/create_instance').publish(server.id) if server.save
-      server
-    end
-
-    def queue_destroy!
-      TorqueBox::Messaging::Queue.new('/queues/destroy_instance').publish(self.id)
-    end
-
-    def set_deleted!
-      update(:state => 'deleted')
-      add_event(:message => "The server has been removed on backend.")
-    end
-
-    def set_error!(e)
-      update(:state => 'error')
-      msg = e.kind_of?(Exception) ? e.message : e
-      add_event(:message => "An error occured while processing this server (#{msg})")
-    end
-
-    def is_deleted?
-      state == 'deleted'
-    end
-
-    def is_error?
-      state == 'error'
-    end
-
-    def is_new?
-      state == 'new'
-    end
+    plugin :association_dependencies,
+      :events => :delete
 
     def update_address(new_address)
       if self.address != new_address
@@ -48,56 +17,59 @@ module CloudManage::Models
       end
     end
 
-    def refresh
-      instance = get_backend_instance
-      return false unless instance
-      if !instance.public_addresses.empty?
-        if acceptable_address_type?(instance.public_addresses.first)
-          update_address(instance.public_addresses.first.value)
-        end
-      end
-      if self.state != instance.state
-        add_event(:message => "State changed from #{self.state} to #{instance.state}")
-        update(:state => instance.state)
-      end
-      self
+    def client
+      @client ||= self.image.account.client
     end
 
-    def get_backend_instance
-      begin
-        self.image.account.client.instance(self.instance_id)
-      rescue Deltacloud::Client::NotFound
-        self.set_deleted!
-        false
-      rescue => e
-        self.set_error!(e)
-        false
+    #### sidekiq methods ####
+    #
+    def task
+      CloudManage::Models::Task
+    end
+
+    def wait_for_running_task!
+      task.run(:server, :wait_for_running, :server_id => self.id)
+    end
+
+    def wait_for_address_task!
+      task.run(:server, :wait_for_address, :server_id => self.id)
+    end
+
+    def self.deploy(opts={})
+      srv = Server[opts['server_id']]
+      image_id, create_opts = srv.image.create_instance_args
+      inst = srv.client.create_instance(image_id, create_opts)
+      srv.update(:state => inst.state, :instance_id => inst._id)
+      srv.add_event(:message => "Server succesfully started #(#{inst._id})")
+      unless srv.state == 'RUNNING'
+        srv.wait_for_running_task!
+      else
+        srv.wait_for_address_task!
       end
     end
 
-    def acceptable_address_type?(address)
-      ['hostname', 'ipv4'].include? address.type.to_s
+    def self.wait_for_running(opts={})
+      srv = Server[opts['server_id']]
+      inst = srv.client.instance(srv.instance_id)
+      srv.add_event(:message => "Waiting for server to become RUNNING")
+      srv.update(:state => inst.state) if inst.state != srv.state
+      unless srv.state == 'RUNNING'
+        raise CloudManage::Workers::Retry
+      else
+        srv.wait_for_address_task!
+      end
     end
 
-    def stopwait
-      retries = 5
-      begin
-        if instance = get_backend_instance
-          if instance.state == 'STOPPED'
-            add_event("Server is now stopped")
-            update(:state => 'STOPPED')
-            TorqueBox::Messaging::Queue.new('/queues/destroy_instance').publish(self.id)
-          else
-            raise
-          end
-        else
-          set_deleted!
-        end
-      rescue
-        retries -= 1
-        add_event(:message => "Waiting for server to stop. ##{retries}")
-        sleep(10)
-        retry if retries >= 0
+    def self.wait_for_address(opts={})
+      srv = Server[opts['server_id']]
+      inst = srv.client.instance(srv.instance_id)
+      srv.add_event(:message => "Waiting for server IP address")
+      raise CloudManage::Workers::Retry if inst.public_addresses.empty?
+      addr = inst.public_addresses.first
+      if [:hostname, :ipv4].include?(addr.type)
+        srv.update_address(addr)
+      else
+        raise CloudManage::Workers::Retry
       end
     end
 

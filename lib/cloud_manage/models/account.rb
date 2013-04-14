@@ -5,10 +5,13 @@ module CloudManage::Models
     one_to_many :keys
     one_to_many :events
 
-    DELTACLOUD_URL = 'http://localhost:3001/api'
-
     plugin :timestamps,
       :create => :created_at, :update => :updated_at
+
+    plugin :association_dependencies,
+      :images => :destroy,
+      :keys => :delete,
+      :events => :delete
 
     def validate
       super
@@ -32,44 +35,21 @@ module CloudManage::Models
     end
 
     def hardware_profiles
-      cache(:hardware_profiles, Proc.new { self.client.hardware_profiles })
+      self.client.hardware_profiles.map { |h| { h._id => h.name} }
     end
 
     def realms
-      cache(:realms, Proc.new { self.client.realms })
+      self.client.realms.map { |r| { r._id => r.name }}
     end
 
     def firewalls
       self.client.firewalls.map { |f| { f._id => f.name }}
     end
 
-    def can_create_keys?
-      self.client.support?('keys') and self.client.feature?(:instances, :authentication_key)
-    end
-
     def create_backend_key(local_key)
       key = client.create_key(local_key.name.strip, :public_key => local_key.pem.strip)
       local_key.update(:backend_id => key._id)
       local_key.update(:pem => key.pem) if local_key.pem.empty?
-    end
-
-    def import_images!
-      TorqueBox::Messaging::Queue.new('/queues/import_images').publish(self.id)
-    end
-
-    def cache(name, collection_proc)
-      cache_key = "#{self.id}_#{name}"
-      if cache_provider.contains_key? cache_key
-        JSON::parse(cache_provider.get(cache_key))
-      else
-        elements = collection_proc.call.map { |ent| { ent._id => ent.name} }
-        cache_provider.put("#{self.id}_#{name}", elements.to_json)
-        elements
-      end
-    end
-
-    def cache_provider
-      @cache_provider ||= TorqueBox::Infinispan::Cache.new(:name => 'cloudmanage', :persist => '/data/cloudmanage')
     end
 
   end

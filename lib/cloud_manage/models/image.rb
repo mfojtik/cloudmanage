@@ -9,6 +9,10 @@ module CloudManage::Models
     plugin :timestamps,
       :create => :created_at, :update => :updated_at
 
+    plugin :association_dependencies,
+      :servers => :destroy,
+      :events => :delete
+
     def validate
       super
       validates_presence [:name, :account_id, :image_id]
@@ -34,6 +38,29 @@ module CloudManage::Models
       create_opts[:hwp_storage] = hwp_storage unless hwp_storage.to_s.empty?
       create_opts[:firewall0] = firewall_id unless firewall_id.to_s.empty?
       create_args << create_opts
+    end
+
+    #### sidekiq methods ####
+    #
+    def task
+      CloudManage::Models::Task
+    end
+
+    def self.import(opts={})
+      acc = Account[opts['account_id']]
+      acc.client.images.each do |img|
+        img = Image.new(
+          :account_id => acc.id,
+          :image_id => img._id,
+          :name => img.name,
+          :description => img.description
+        )
+        begin
+          img.save if img.valid?
+        rescue => e
+          img.add_event(:severity => 'ERROR', :message => "Unable to import image #{img.image_id} (#{e.message})")
+        end
+      end
     end
 
   end
