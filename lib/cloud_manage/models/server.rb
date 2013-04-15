@@ -48,6 +48,36 @@ module CloudManage::Models
       end
     end
 
+    def self.remove(opts={})
+      srv = Server[opts['server_id']]
+      begin
+        inst = srv.client.instance(srv.instance_id)
+        srv.update(:state => inst.state)
+      rescue Deltacloud::Client::NotFound
+        srv.destroy
+        return true
+      end
+      if inst.actions.include?(:destroy)
+        if srv.client.destroy_instance(inst._id)
+          srv.destroy
+          return true
+        end
+      else
+        if inst.actions.include?(:stop)
+          srv.client.stop_instance(inst._id)
+          srv.add_event(
+            :message => "Waiting for instance to STOP"
+          )
+        else
+          srv.add_event(
+            :severity => 'ERROR',
+            :message => "Unable to determine how to destroy this server."
+          )
+        end
+      end
+      raise CloudManage::Workers::Retry
+    end
+
     def self.wait_for_running(opts={})
       srv = Server[opts['server_id']]
       inst = srv.client.instance(srv.instance_id)

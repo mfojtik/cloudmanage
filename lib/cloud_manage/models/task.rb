@@ -12,7 +12,7 @@ module CloudManage::Models
     def self.run(klass_name, method, opts={})
       new_task = new(:klass => klass_name, :name => method, :params => JSON::dump(opts))
       if new_task.valid?
-        new_task.save
+        new_task.save(:transaction => false)
       else
         raise "Cannot created new Task (#{new_task.errors})"
       end

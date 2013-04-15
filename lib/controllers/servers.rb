@@ -15,7 +15,7 @@ module CloudManage::Controllers
 
     get '/servers/:id/destroy' do
       server = Server[params['id']]
-      server.queue_destroy!
+      server.task.run(:server, :remove, :server_id => server.id)
       flash[:notice] = "Server #{server.image.name} is now being deleted."
       Event.create(:message => flash[:notice])
       redirect back
