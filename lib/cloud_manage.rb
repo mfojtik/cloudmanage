@@ -103,12 +103,4 @@ require_relative './core_ext/string'
 #
 DB = CloudManage.connect
 
-if DB.table_exists? :servers
-  require_relative './workers'
-
-  # Load Sequel Models
-  #
-  [:account, :image, :key, :server, :event, :task].each do |t|
-    require_relative "./cloud_manage/models/#{t}"
-  end
-end
+require_relative './models'
