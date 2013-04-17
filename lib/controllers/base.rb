@@ -14,7 +14,10 @@ module CloudManage::Controllers
 
     error Sequel::ValidationFailed do
       report_error_for(env['sinatra.error'].model)
-      redirect(back) && halt
+    end
+
+    error Faraday::Error::ConnectionFailed do
+      report_error("Please make sure Deltacloud API is running (#{CloudManage::Models::DELTACLOUD_URL})")
     end
 
     set :views, File.join(File.dirname(__FILE__), '..', '..', 'views')

@@ -15,8 +15,13 @@ module CloudManage::Controllers
 
     get '/servers/:id/destroy' do
       server = Server[params['id']]
-      server.task.run(:server, :remove, :server_id => server.id)
-      flash[:notice] = "Server #{server.image.name} is now being deleted."
+      if params['force']
+        server.destroy
+        flash[:notice] = "Server #{server.image.name} was succesfully removed."
+      else
+        server.task.run(:server, :remove, :server_id => server.id)
+        flash[:notice] = "Server #{server.image.name} was succesfully scheduled for removal."
+      end
       Event.create(:message => flash[:notice])
       redirect back
     end

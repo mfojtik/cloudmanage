@@ -1,5 +1,12 @@
 module CloudManage
   class UI < Sinatra::Base
+
+    configure :development do
+      Sinatra::Application.reset!
+      use Rack::Reloader
+      use Rack::CommonLogger
+    end
+
     register Sinatra::Twitter::Bootstrap::Assets
 
     enable :sessions

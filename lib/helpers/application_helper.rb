@@ -5,7 +5,11 @@ module CloudManage
       errors = model.errors.inject("") { |r, err|
         r+="<em>#{err[0]}</em>: #{err[1].join(' and ')}<br/>"
       }
-      flash[:error] = errors
+      report_error(errors)
+    end
+
+    def report_error(message)
+      flash[:error] = message
       redirect(back) && halt
     end
 

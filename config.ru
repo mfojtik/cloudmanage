@@ -4,5 +4,4 @@ require 'cloud_manage'
 require 'controllers'
 require 'app'
 
-use Rack::Reloader
 run CloudManage::UI

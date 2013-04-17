@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bundle exec sidekiq -r./lib/workers.rb -c 50 -e production

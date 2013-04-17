@@ -26,6 +26,10 @@
         %td
           %span.label=s.state
         %td
-          %a{ :class => 'btn-danger btn', :href => "/servers/#{s.id}/destroy" } Delete
+          - if s.state == 'STOPPED'
+            %a{ :class => 'btn-danger btn', :href => "/servers/#{s.id}/destroy?force=1" } Force Delete
+          - else
+            %a{ :class => 'btn-danger btn', :href => "/servers/#{s.id}/destroy" } Stop
+
 
 - pagination(servers, "/servers")

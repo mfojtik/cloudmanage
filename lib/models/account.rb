@@ -1,6 +1,9 @@
 module CloudManage::Models
   class Account < Sequel::Model
 
+    include BaseModel
+    include Helpers::AccountTasksHelper
+
     one_to_many :images
     one_to_many :keys
     one_to_many :events

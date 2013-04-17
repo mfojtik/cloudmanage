@@ -7,7 +7,7 @@ Bundler.require(:default)
 module CloudManage
 
   module Models
-    DELTACLOUD_URL = 'http://localhost:3002/api'
+    DELTACLOUD_URL = 'http://localhost:3001/api'
     SCHEMA_VERSION = '1'
   end
 
@@ -15,7 +15,7 @@ module CloudManage
     sequel_class = ::Sequel
     connection = sequel_class.connect(
       'postgres://root@localhost/cloudmanage_dev',
-      :logger => ::Logger.new($stdout)
+      :logger => ::Logger.new('logs/sequel.log')
     )
     sequel_class::Model.plugin :validation_helpers
     sequel_class.extension :pagination
