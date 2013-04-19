@@ -21,14 +21,19 @@ module CloudManage::Controllers
     end
 
     get '/images' do
-      images = Image.where(
-        :starred => true).paginate(page, 25)
+      images = Image.where(:starred => true).paginate(page, 25)
       haml :'images/index', :locals => { :images => images }
     end
 
     get '/images/:id/launch' do
       image = Image[params[:id]]
       haml :'images/launch', :locals => { :image => image }
+    end
+
+    get '/images/:id/favorite' do
+      image = Image[params[:id]]
+      image.update(:starred => (params['remove'] ? false : true))
+      redirect "/images"
     end
 
   end

@@ -1,6 +1,8 @@
 module CloudManage::Models
   class Image < Sequel::Model
 
+    include BaseModel
+
     many_to_one :account
     many_to_one :key
     one_to_many :servers
@@ -30,7 +32,7 @@ module CloudManage::Models
       create_args = []
       create_args << image_id
       create_opts = {}
-      create_opts[:keyname] = self.key.backend_id
+      create_opts[:keyname] = self.key.backend_id unless self.key.backend_id.nil?
       create_opts[:realm_id] = realm_id unless realm_id.to_s.empty?
       create_opts[:hwp_id] = hwp_id unless hwp_id.to_s.empty?
       create_opts[:hwp_cpu] = hwp_id unless hwp_cpu.to_s.empty?
@@ -38,29 +40,6 @@ module CloudManage::Models
       create_opts[:hwp_storage] = hwp_storage unless hwp_storage.to_s.empty?
       create_opts[:firewall0] = firewall_id unless firewall_id.to_s.empty?
       create_args << create_opts
-    end
-
-    #### sidekiq methods ####
-    #
-    def task
-      CloudManage::Models::Task
-    end
-
-    def self.import(opts={})
-      acc = Account[opts['account_id']]
-      acc.client.images.each do |img|
-        img = Image.new(
-          :account_id => acc.id,
-          :image_id => img._id,
-          :name => img.name,
-          :description => img.description
-        )
-        begin
-          img.save if img.valid?
-        rescue => e
-          img.add_event(:severity => 'ERROR', :message => "Unable to import image #{img.image_id} (#{e.message})")
-        end
-      end
     end
 
   end

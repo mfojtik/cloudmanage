@@ -2,11 +2,11 @@ module CloudManage::Models
   class Account < Sequel::Model
 
     include BaseModel
-    include Helpers::AccountTasksHelper
 
     one_to_many :images
     one_to_many :keys
     one_to_many :events
+    one_to_many :resources
 
     plugin :timestamps,
       :create => :created_at, :update => :updated_at
@@ -15,6 +15,8 @@ module CloudManage::Models
       :images => :destroy,
       :keys => :delete,
       :events => :delete
+
+    self.use_transactions=false
 
     def validate
       super
@@ -26,11 +28,38 @@ module CloudManage::Models
     end
 
     def client
-      Deltacloud::Client(
+      @client ||= Deltacloud::Client(
         DELTACLOUD_URL, username, password,
         :driver => driver,
         :provider => api_provider_url
       )
+    end
+
+    def image_exists?(image_id)
+      images_dataset.where(:image_id => image_id).count != 0
+    end
+
+    def realm_exists?(realm_id)
+      resource_exists?(:realm, realm_id)
+    end
+
+    def profile_exists?(profile_id)
+      resource_exists?(:hardware_profile, profile_id)
+    end
+
+    def firewall_exists?(firewall_id)
+      resource_exists?(:firewall, firewall_id)
+    end
+
+    def resource_exists?(kind, res_id)
+      resources_dataset.where(
+        :kind => kind.to_s,
+        :resource_id => res_id
+      ).first
+    end
+
+    def get_resources(kind)
+      resources_dataset.where(:kind => kind.to_s).map { |r| { r.resource_id => r.name } }
     end
 
     def drivers
@@ -38,21 +67,29 @@ module CloudManage::Models
     end
 
     def hardware_profiles
-      self.client.hardware_profiles.map { |h| { h._id => h.name} }
+      get_resources(:hardware_profile)
     end
 
     def realms
-      self.client.realms.map { |r| { r._id => r.name }}
+      get_resources(:realm)
     end
 
     def firewalls
-      self.client.firewalls.map { |f| { f._id => f.name }}
+      get_resources(:firewall)
     end
 
     def create_backend_key(local_key)
       key = client.create_key(local_key.name.strip, :public_key => local_key.pem.strip)
       local_key.update(:backend_id => key._id)
       local_key.update(:pem => key.pem) if local_key.pem.empty?
+    end
+
+    def after_create
+      super
+      task_dispatcher(:import_images_worker)
+      task_dispatcher(:populate_realms_worker)
+      task_dispatcher(:populate_hardware_profiles_worker)
+      task_dispatcher(:populate_firewalls_worker) if client.support?(:firewalls)
     end
 
   end

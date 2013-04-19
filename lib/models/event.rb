@@ -1,6 +1,8 @@
 module CloudManage::Models
   class Event < Sequel::Model
 
+    self.use_transactions=false
+
     plugin :timestamps, :create => :created_at
     many_to_one :account
     many_to_one :key
@@ -12,6 +14,7 @@ module CloudManage::Models
       return :account if self.account_id
       return :image if self.image_id
       return :key if self.key_id
+      return :task if self.task_id
       :none
     end
 

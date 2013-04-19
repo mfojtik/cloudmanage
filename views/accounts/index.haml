@@ -1,4 +1,9 @@
-%h3 Cloud Accounts
+%h2 Accounts
+
+.pull-right
+  %a{ :class => 'pull-right btn', :href => '/accounts/new'} New Account
+  %br
+  %br
 
 %table.table.table-striped.table-bordered
   %thead
@@ -6,7 +11,8 @@
       %th Name
       %th Provider
       %th API key
-      %td
+      %th Images
+      %th Keys
       %td
   %tbody
     - accounts.each do |a|
@@ -29,5 +35,3 @@
           %a{ :class => 'btn', :href => "/accounts/#{a.id}/edit" } Edit
           %a{ :class => 'btn-danger btn', :href => "/accounts/#{a.id}/destroy" } Delete
 
-%p
-  %a{ :class => 'pull-right btn', :href => '/accounts/new'} New Account

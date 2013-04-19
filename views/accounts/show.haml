@@ -1,5 +1,27 @@
 %h2="#{account.name} account"
 %p{ :class => 'pull-right'}
-  %a{ :class => 'btn', :href => "/accounts/#{account.id}/import" } Refresh Images
+  %a{ :class => 'btn', :href => url("/accounts/#{account.id}/populate?firewalls") } Refresh Firewalls
+  %a{ :class => 'btn', :href => url("/accounts/#{account.id}/populate?realms") } Refresh Realms
+  %a{ :class => 'btn', :href => url("/accounts/#{account.id}/populate?images") } Refresh Images
+  %a{ :class => 'btn', :href => url("/keys/#{account.id}/new") } Add Key
+  %a{ :class => 'btn', :href => url("/accounts/#{account.id}/edit") } Edit
+  %a{ :class => 'btn btn-danger', :href => url("/accounts/#{account.id}/destroy") } Delete
 
 - show_model(account)
+
+%h3 Account Events
+
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th Severity
+      %th Message
+      %th Time
+  %tbody
+    - account.events.reverse.each do |e|
+      %tr{ :class => e.severity.downcase }
+        %td=e.severity
+        %td=e.message
+        %td
+          %small
+            - time_ago(e.created_at)

@@ -1,6 +1,12 @@
 %h3="#{account.name} images"
 
-- pagination(images, "/accounts/#{account.id}/images", :klass => [ 'pull-right' ])
+.pull-right
+  = will_paginate images
+
+%form{ :class => 'form-search pull-left', :action => "/accounts/#{account.id}/images"}
+  %input{ :type => :text, :name => :q, :class => 'input-medium search-query' }
+  %button{ :type => :submit, :class => 'btn'} Search
+
 
 %table.table.table-striped.table-bordered
   %thead
@@ -16,4 +22,4 @@
         %td=i.name
         %td=i.description
 
-- pagination(images, "/accounts/#{account.id}/images")
+= will_paginate images

@@ -1,0 +1,20 @@
+%h2="Task #{task.name}"
+
+- show_model(task)
+
+%h3 Task events
+
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th Severity
+      %th Message
+      %th Time
+  %tbody
+    - task.events.each do |e|
+      %tr{ :class => e.severity.downcase }
+        %td=e.severity
+        %td=e.message
+        %td
+          %small
+            - time_ago(e.created_at)

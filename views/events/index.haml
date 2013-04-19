@@ -4,33 +4,15 @@
 %table.table.table-striped.table-bordered
   %thead
     %tr
+      %th Task
+      %th Current State
       %th Time
-      %th Model
-      %th Operation
-      %th State
   %tbody
     - tasks.each do |t|
       %tr
         %td
-          - time_ago(t.created_at)
-        %td=t.klass
-        %td=t.name
-        %td=t.state
-
-%table.table.table-striped.table-bordered
-  %thead
-    %tr
-      %th Time
-      %th Category
-      %th Severity
-      %th Message
-  %tbody
-    - events.each do |e|
-      %tr
+          %a{ :href => url("/tasks/#{t.id}")}="#{t.worker_klass.camelize.gsub(/Worker$/,'')}"
+        %td=state_to_badge(t.state)
         %td
-          - time_ago(e.created_at)
-        %td=e.kind
-        %td=e.severity
-        %td=e.message
-
-= will_paginate events
+          %small
+            - time_ago(t.created_at)

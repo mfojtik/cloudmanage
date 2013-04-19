@@ -2,7 +2,6 @@ module CloudManage::Models
   class Server < Sequel::Model
 
     include BaseModel
-    include Helpers::ServerTasksHelper
 
     plugin :timestamps,
       :create => :created_at, :update => :updated_at
@@ -22,6 +21,10 @@ module CloudManage::Models
 
     def client
       @client ||= self.image.account.client
+    end
+
+    def instance
+      client.instance(instance_id)
     end
 
   end

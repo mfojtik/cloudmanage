@@ -28,11 +28,12 @@ module CloudManage::Models
         DB.transaction do
           begin
             backend_key = create_backend_key(key)
-            key.update(:backend_id => backend_key._id)
-            key.update(:pem => backend_key.pem) if key.pem.strip.empty?
+            if backend_key
+              key.update(:backend_id => backend_key._id)
+              key.update(:pem => backend_key.pem) if key.pem.strip.empty?
+            end
             key.save
-          rescue => e
-            puts e.message
+          rescue
             raise Sequel::Rollback
           end
         end

@@ -10,7 +10,8 @@ module CloudManage::Controllers
       end
       report_error_for(account) unless account.valid?
       account.save
-      redirect "/accounts/#{account.id}"
+      flash[:notice] = "Account succesfully saved, please create an authentication keys."
+      redirect "/keys/#{account.id}/new"
     end
 
     get '/accounts' do
@@ -34,16 +35,28 @@ module CloudManage::Controllers
       redirect back
     end
 
-    get '/accounts/:id/import' do
+    get '/accounts/:id/populate' do
       account = Account[params[:id]]
-      account.import_images_task!
-      flash[:notice] = "Importing backend images for #{account.name}. <a href='#{url('/accounts')}'>Refresh</a> at will."
+      if params.has_key? 'images'
+        account.task_dispatcher(:import_images_worker)
+      elsif params.has_key? 'realms'
+        account.task_dispatcher(:populate_realms_worker)
+      elsif params.has_key? 'firewalls'
+        account.task_dispatcher(:populate_firewalls_worker)
+      end
       redirect back
     end
 
     get '/accounts/:id/images' do
       account = Account[params[:id]]
-      images = Image.where(:account_id => account.id).paginate((params[:page] ? params[:page].to_i : 1), 25)
+      if params['q']
+        images = account.images_dataset.where(
+          Sequel.ilike(:description, "%#{params['q']}%") |
+          Sequel.ilike(:name, "%#{params['q']}%")
+        ).paginate(page, 25)
+      else
+        images = Image.where(:account_id => account.id).paginate(page, 25)
+      end
       haml :'accounts/images', :locals => { :account => account, :images => images }
     end
 

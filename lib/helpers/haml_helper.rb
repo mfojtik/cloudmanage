@@ -100,7 +100,6 @@ module CloudManage
           haml_concat ''
         end
         options.each do |v|
-          p v.inspect
           value, label = v.to_a.first
           if selected and selected == value.to_s
             haml_tag :option, :value => value, :selected => :selected do
@@ -132,6 +131,21 @@ module CloudManage
       haml_tag :abbr, :class => :ago, :title => time do
         haml_concat time
       end
+    end
+
+    def state_to_badge(state)
+      klass = case state
+              when 'COMPLETE' then 'success'
+              when 'RETRY' then 'info'
+              when 'ERROR' then 'important'
+              else
+                'default'
+              end
+      "<span class='label label-#{klass}'>#{state.downcase}</span>"
+    end
+
+    def will_paginate(arr)
+      super(arr, :renderer => BootstrapPagination::Sinatra)
     end
 
   end

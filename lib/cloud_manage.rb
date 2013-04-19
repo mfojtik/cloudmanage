@@ -34,6 +34,13 @@ module CloudManage
       DateTime    :updated_at
       DateTime    :created_at
     end
+    DB.create_table :resources do
+      primary_key :id
+      Integer     :account_id,    :null => false, :index => true
+      String      :kind,          :null => false, :size => 255, :index => true
+      String      :resource_id,   :null => false, :size => 255
+      String      :name,          :null => false, :size => 255
+    end
     DB.create_table :images do
       primary_key :id
       Integer     :account_id,    :null => false, :index => true
@@ -65,7 +72,7 @@ module CloudManage
     end
     DB.create_table :servers do
       primary_key :id
-      String      :instance_id,   :size => 10, :index => true
+      String      :instance_id,   :size => 255, :index => true
       Integer     :image_id,      :null => false, :index => true
       String      :state,         :default => 'new', :size => 64
       String      :address,       :size => 255
@@ -80,14 +87,13 @@ module CloudManage
       Integer     :image_id,   :index => true
       Integer     :task_id,    :index => true
       String      :severity,   :default => 'INFO', :null => false, :size => 10
-      String      :message,    :size => 255
+      String      :message
       DateTime    :created_at
     end
     DB.create_table :tasks do
       primary_key :id
-      Integer     :parent_id,  :index => true
-      String      :klass,      :null => false, :size => 64, :index => true
-      String      :name,       :null => false, :size => 64
+      Integer     :parent_id,     :index => true
+      String      :worker_klass,  :null => false, :size => 64, :index => true
       String      :params
       String      :state,      :null => false, :default => 'NEW', :size => 32
       DateTime    :created_at
