@@ -19,8 +19,7 @@ module CloudManage::Controllers
     end
 
     get '/keys/:id' do
-      key = Key[params[:id]]
-      haml :'keys/show', :locals => { :key => key }
+      haml :'keys/show', :locals => { :key => Key[params[:id]] }
     end
 
     get '/keys/:id/destroy' do

@@ -2,13 +2,11 @@ module CloudManage::Controllers
   class Images < Base
 
     get '/images/:id' do
-      image = Image[params[:id]]
-      haml :'images/show', :locals => { :image => image }
+      haml :'images/show', :locals => { :image => Image[params[:id]] }
     end
 
     get '/images/:id/edit' do
-      image = Image[params[:id]]
-      haml :'images/edit', :locals => { :image => image }
+      haml :'images/edit', :locals => { :image => Image[params[:id]] }
     end
 
     post '/images' do
@@ -26,8 +24,7 @@ module CloudManage::Controllers
     end
 
     get '/images/:id/launch' do
-      image = Image[params[:id]]
-      haml :'images/launch', :locals => { :image => image }
+      haml :'images/launch', :locals => { :image => Image[params[:id]] }
     end
 
     get '/images/:id/favorite' do

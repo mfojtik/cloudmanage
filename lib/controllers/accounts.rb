@@ -15,8 +15,7 @@ module CloudManage::Controllers
     end
 
     get '/accounts' do
-      accounts = Account.dataset.paginate((params[:page] || 1), 10)
-      haml :'accounts/index', :locals => { :accounts => accounts }
+      haml :'accounts/index', :locals => { :accounts => Account.dataset.paginate(page, 10) }
     end
 
     get '/accounts/new' do
@@ -24,8 +23,7 @@ module CloudManage::Controllers
     end
 
     get '/accounts/:id/edit' do
-      account = Account[params[:id]]
-      haml :'accounts/new', :locals => { :account => account }
+      haml :'accounts/new', :locals => { :account => Account[params[:id]] }
     end
 
     get '/accounts/:id/destroy' do
@@ -36,8 +34,7 @@ module CloudManage::Controllers
     end
 
     get '/accounts/:id/populate' do
-      account = Account[params[:id]]
-      account.task_dispatcher(params.keys.first)
+      Account[params[:id]].task_dispatcher(params.keys.first)
       redirect back
     end
 
@@ -55,8 +52,7 @@ module CloudManage::Controllers
     end
 
     get '/accounts/:id' do
-      account = Account[params[:id]]
-      haml :'accounts/show', :locals => { :account => account }
+      haml :'accounts/show', :locals => { :account => Account[params[:id]] }
     end
 
   end

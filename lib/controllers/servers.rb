@@ -2,8 +2,7 @@ module CloudManage::Controllers
   class Servers < Base
 
     get '/servers' do
-      servers = Server.dataset.paginate((params[:page] || 1), 10)
-      haml :'servers/index', :locals => { :servers => servers }
+      haml :'servers/index', :locals => { :servers => Server.dataset.paginate(page, 25) }
     end
 
     get '/servers/new' do
