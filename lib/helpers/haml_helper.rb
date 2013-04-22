@@ -1,11 +1,17 @@
 module CloudManage
   module HamlHelper
 
+    def label(attr)
+      attr = attr.to_s.gsub(/_id$/,'')
+      attr.gsub('_', ' ').titlecase
+    end
+
     def show_model(model)
       haml_tag :dl do
         model.values.each do |attr, value|
+          next if value.to_s.empty? || attr == :id
           haml_tag :dt do
-            haml_concat attr.to_s.gsub('_', ' ').titlecase
+            haml_concat(label(attr))
           end
           haml_tag :dd do
             haml_concat case value
@@ -13,8 +19,10 @@ module CloudManage
               when TrueClass then 'yes'
               when FalseClass then 'no'
               when NilClass then '<em class="muted">information not available</em>'
+              when Time then capture_haml { time_ago(value) }
+              when Fixnum then "<i>#{value}</i>"
               else
-                value.to_s
+                "#{value.class}: #{value.to_s}"
             end
           end
         end
@@ -135,9 +143,9 @@ module CloudManage
 
     def state_to_badge(state)
       klass = case state
-              when 'COMPLETE' then 'success'
-              when 'RETRY' then 'info'
-              when 'ERROR' then 'important'
+              when 'COMPLETE', 'RUNNING' then 'success'
+              when 'RETRY', 'PENDING' then 'info'
+              when 'ERROR', 'STOPPED' then 'important'
               else
                 'default'
               end

@@ -37,13 +37,7 @@ module CloudManage::Controllers
 
     get '/accounts/:id/populate' do
       account = Account[params[:id]]
-      if params.has_key? 'images'
-        account.task_dispatcher(:import_images_worker)
-      elsif params.has_key? 'realms'
-        account.task_dispatcher(:populate_realms_worker)
-      elsif params.has_key? 'firewalls'
-        account.task_dispatcher(:populate_firewalls_worker)
-      end
+      account.task_dispatcher(params.keys.first)
       redirect back
     end
 

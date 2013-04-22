@@ -84,12 +84,25 @@ module CloudManage::Models
       local_key.update(:pem => key.pem) if local_key.pem.empty?
     end
 
+    def running_servers
+      images.map { |i| i.servers_dataset.where(:state => 'RUNNING').all }.flatten
+    end
+
+    def populate_servers(t=120)
+      CloudManage::Workers::Account::InstancesWorker.perform_in(t, self.id)
+    end
+
+    def self.refresh_servers!
+      all.each_with_index { |a, i| a.populate_servers(120 + (i*5)) }
+    end
+
     def after_create
       super
-      task_dispatcher(:import_images_worker)
-      task_dispatcher(:populate_realms_worker)
-      task_dispatcher(:populate_hardware_profiles_worker)
-      task_dispatcher(:populate_firewalls_worker) if client.support?(:firewalls)
+      task_dispatcher(:images)
+      task_dispatcher(:realms)
+      task_dispatcher(:hardware_profiles)
+      task_dispatcher(:firewalls) if client.support?(:firewalls)
+      populate_servers
     end
 
   end

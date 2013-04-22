@@ -8,13 +8,18 @@ end
 
 # Worker classes
 #
-require_relative './workers/import_images_worker'
-require_relative './workers/populate_realms_worker'
-require_relative './workers/populate_hardware_profiles_worker'
-require_relative './workers/populate_firewalls_worker'
-require_relative './workers/server_running_worker'
-require_relative './workers/server_address_worker'
-require_relative './workers/server_start_worker'
-require_relative './workers/server_stop_worker'
-require_relative './workers/server_destroy_worker'
-require_relative './workers/deploy_server_worker'
+# Server workers:
+require_relative './workers/server/address_worker'
+require_relative './workers/server/deploy_worker'
+require_relative './workers/server/start_worker'
+require_relative './workers/server/stop_worker'
+require_relative './workers/server/destroy_worker'
+require_relative './workers/server/running_worker'
+
+# Account workers:
+#
+require_relative './workers/account/firewalls_worker.rb'
+require_relative './workers/account/realms_worker.rb'
+require_relative './workers/account/hardware_profiles_worker.rb'
+require_relative './workers/account/images_worker.rb'
+require_relative './workers/account/instances_worker.rb'

@@ -7,6 +7,11 @@ module CloudManage::Controllers
       haml :'keys/new', :locals => { :account => account, :key => key }
     end
 
+    get '/keys/:id/edit' do
+      key = Key[params[:id]]
+      haml :'keys/new', :locals => { :account => key.account, :key => key }
+    end
+
     get '/accounts/:account_id/keys' do
       account = Account[params[:account_id]]
       keys = Key.where(:account_id => account.id).paginate((params[:page] ? params[:page].to_i : 1), 25)
@@ -25,6 +30,8 @@ module CloudManage::Controllers
     end
 
     post '/keys' do
+      # Text fields sux ;-)
+      params['key']['pem'].strip! if params['key']['pem']
       key = Key.create_or_update_key(params['key'])
       if key.id
         flash[:notice] = "Authentication key #{key.name} was succesfully created for #{key.account.name}"

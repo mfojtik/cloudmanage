@@ -6,12 +6,16 @@ module CloudManage::Models
       add_event(:message => message, :severity => severity || 'INFO')
     end
 
+    def model_name
+      self.class.name.split('::').last
+    end
+
     def model_class
-      self.class.name.split('::').last.underscore
+      model_name.underscore
     end
 
     def worker_class(worker_name)
-      CloudManage::Workers.const_get(worker_name.to_s.camelize)
+      CloudManage::Workers.const_get(model_name).const_get(worker_name.to_s.camelize)
     end
 
     def task_dispatcher(worker_name)
@@ -23,7 +27,7 @@ module CloudManage::Models
         }
       )
       if task.exists?
-        worker_class(worker_name).perform_async(task.id)
+        worker_class("#{worker_name}_worker").perform_async(task.id)
       else
         raise "Unable to dispatch #{task.inspect}"
       end

@@ -23,8 +23,7 @@
             %small=s.image.name
         %td
           %small=s.address
-        %td
-          %span.label=s.state
+        %td=state_to_badge(s.state)
         %td
           - if s.state == 'STOPPED'
             %a{ :class => 'btn-danger btn', :href => "/servers/#{s.id}/destroy?force=1" } Force Delete

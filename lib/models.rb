@@ -7,4 +7,6 @@ if DB.table_exists? :servers
   [:account, :image, :key, :server, :event, :task, :resource].each do |t|
     require_relative "./models/#{t}"
   end
+
 end
+

@@ -9,8 +9,10 @@
 
 %table.table.table-striped.table-bordered
   %tbody
-    - server.events.reverse.each do |e|
-      %tr
-        %td=e.created_at
+    - server.events.each do |e|
+      %tr{:class => e.severity.downcase }
+        %td
+          %small
+            - time_ago(e.created_at)
         %td=e.severity
         %td=e.message

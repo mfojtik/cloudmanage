@@ -8,7 +8,7 @@ module CloudManage::Controllers
 
     get '/servers/new' do
       server = Server.create(:image_id => params[:image_id])
-      server.task_dispatcher(:deploy_server_worker)
+      server.task_dispatcher(:deploy)
       flash[:notice] = "Server ##{server.id} deployment initiated."
       redirect url("/servers")
     end
@@ -19,7 +19,7 @@ module CloudManage::Controllers
         server.destroy
         flash[:notice] = "Server #{server.image.name} was succesfully removed."
       else
-        server.task_dispatcher(:server_destroy_worker)
+        server.task_dispatcher(:destroy)
         flash[:notice] = "Server #{server.image.name} was succesfully scheduled for removal."
       end
       Event.create(:message => flash[:notice])

@@ -18,8 +18,11 @@
     - images.each do |i|
       %tr
         %td
-          %a{ :href => url("/images/#{i.id}")}=i.image_id
+          %a{ :href => url("/images/#{i.id}")}
+            %small=i.image_id
         %td=i.name
-        %td=i.description
+        %td
+          %small
+            %em=i.description
 
 = will_paginate images

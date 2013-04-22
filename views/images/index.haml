@@ -14,16 +14,17 @@
     - images.each do |i|
       %tr
         %td
-          %small=i.name
+          %small
+            %a{:href => url("/images/#{i.id}")}=i.name
         %td
-          %a{ :href => url("/images/#{i.id}")}=i.image_id
+          %small=i.image_id
         %td
           %a{ :href => url("/accounts/#{i.account_id}")}=i.account.name
         %td
           - if i.key.nil?
             %em none
           - else
-            %a{ :href => url("/accounts/#{i.key_id}")}=i.key.name
+            %a{ :href => url("/keys/#{i.key_id}")}=i.key.name
         %td
           - if i.ready_for_launch?
             %a{ :class => 'btn btn-success', :href => url("/images/#{i.id}/launch") } Launch

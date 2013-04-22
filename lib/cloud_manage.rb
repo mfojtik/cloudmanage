@@ -7,7 +7,7 @@ Bundler.require(:default)
 module CloudManage
 
   module Models
-    DELTACLOUD_URL = 'http://localhost:3001/api'
+    DELTACLOUD_URL = 'http://localhost:9292/api'
     SCHEMA_VERSION = '1'
   end
 

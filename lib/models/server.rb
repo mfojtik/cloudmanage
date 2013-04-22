@@ -2,6 +2,7 @@ module CloudManage::Models
   class Server < Sequel::Model
 
     include BaseModel
+    include CloudManage::Workers::TaskHelper
 
     plugin :timestamps,
       :create => :created_at, :update => :updated_at
@@ -24,7 +25,11 @@ module CloudManage::Models
     end
 
     def instance
-      client.instance(instance_id)
+      begin
+        client.instance(instance_id)
+      rescue
+        retry_task
+      end
     end
 
   end

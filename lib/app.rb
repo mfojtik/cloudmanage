@@ -4,7 +4,7 @@ module CloudManage
     configure :development do
       Sinatra::Application.reset!
       use Rack::Reloader
-      use Rack::CommonLogger
+      #use Rack::CommonLogger
     end
 
     register Sinatra::Twitter::Bootstrap::Assets
