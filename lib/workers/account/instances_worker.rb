@@ -25,11 +25,11 @@ module CloudManage
               server.update(:state => 'STOPPED')
             end
           end
-          CloudManage::Workers::PopulateInstancesWorker.perform_in(120, account_id)
+          InstancesWorker.perform_in(120, account_id)
         end
 
         def retries_exhausted(worker, msg)
-          CloudManage::Workers::PopulateInstancesWorker.perform_in(120, @account.id)
+          InstancesWorker.perform_in(120, @account.id)
         end
 
         private

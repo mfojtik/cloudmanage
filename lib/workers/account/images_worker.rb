@@ -13,7 +13,6 @@ module CloudManage
         def perform(task_id)
           return unless setup_task(task_id)
           account = Models::Account[@task.parse_params['id']]
-          account.log('Populating account images')
           images = account.client.images
           counter = 0
           images.each do |img|

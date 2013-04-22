@@ -28,6 +28,26 @@ module CloudManage
         raise Retry
       end
 
+      def populate_account_with(entity, task_id)
+        return unless setup_task(task_id)
+        account = Models::Account[@task.parse_params['id']]
+        counter = 0
+        res = account.client.send(entity)
+        res.each do |r|
+          if current_res = account.send("#{entity.to_s.singularize}_exists?", r._id)
+            current_res.update(:name => r.name)
+          else
+            account.add_resource(
+              :kind => entity.to_s.singularize,
+              :resource_id => r._id,
+              :name => r.name
+            ) && counter += 1
+          end
+        end
+        @task.change_state(:completed)
+        account.log("#{counter} new #{entity} were imported")
+      end
+
     end
   end
 end

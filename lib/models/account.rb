@@ -36,14 +36,14 @@ module CloudManage::Models
     end
 
     def image_exists?(image_id)
-      images_dataset.where(:image_id => image_id).count != 0
+      images_dataset.where(:image_id => image_id).first
     end
 
     def realm_exists?(realm_id)
       resource_exists?(:realm, realm_id)
     end
 
-    def profile_exists?(profile_id)
+    def hardware_profile_exists?(profile_id)
       resource_exists?(:hardware_profile, profile_id)
     end
 
