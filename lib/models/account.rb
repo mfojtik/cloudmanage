@@ -23,6 +23,11 @@ module CloudManage::Models
       validates_presence [:name, :driver, :username, :password]
     end
 
+    def search(q)
+      images_dataset.where(Sequel.ilike(:description, "%#{q}%") |
+                           Sequel.ilike(:name, "%#{q}%"))
+    end
+
     def api_provider_url
       new? ? nil : (provider_url && provider_url.empty?) ? nil : provider_url
     end

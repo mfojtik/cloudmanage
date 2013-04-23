@@ -18,5 +18,6 @@ gem 'will_paginate', '~> 3.0.0'
 gem 'will_paginate-bootstrap'
 gem 'pry'
 gem 'slim'
+gem 'net-ssh', :require => 'net/ssh'
 
 gem 'deltacloud-core', '>=1.1.3', :require => 'deltacloud_rack'

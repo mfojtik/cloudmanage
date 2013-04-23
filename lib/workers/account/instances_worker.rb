@@ -19,7 +19,6 @@ module CloudManage
               address = inst.public_addresses.first
               if [:hostname, :ipv4].include?(address.type) and server.address != address.to_s
                 server.update_address(address)
-                server.log("Address changed to #{address}")
               end
             else
               server.update(:state => 'STOPPED')
@@ -29,7 +28,7 @@ module CloudManage
         end
 
         def retries_exhausted(worker, msg)
-          InstancesWorker.perform_in(120, @account.id)
+          InstancesWorker.perform_in(180, @account.id)
         end
 
         private

@@ -26,8 +26,7 @@ module CloudManage::Controllers
     end
 
     get '/servers/:id' do
-      server = Server[params['id']]
-      haml :'servers/show', :locals => { :server => server }
+      haml :'servers/show', :locals => { :server => Server[params[:id]] }
     end
 
   end

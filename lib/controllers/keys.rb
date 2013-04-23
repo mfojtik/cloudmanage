@@ -8,13 +8,12 @@ module CloudManage::Controllers
     end
 
     get '/keys/:id/edit' do
-      key = Key[params[:id]]
-      haml :'keys/new', :locals => { :account => key.account, :key => key }
+      haml :'keys/new', :locals => { :account => key.account, :key => Key[params[:id]] }
     end
 
     get '/accounts/:account_id/keys' do
       account = Account[params[:account_id]]
-      keys = Key.where(:account_id => account.id).paginate((params[:page] ? params[:page].to_i : 1), 25)
+      keys = account.keys_dataset.paginate(page, 25)
       haml :'keys/index', :locals => { :keys => keys, :account => account }
     end
 

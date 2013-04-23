@@ -12,19 +12,24 @@ module CloudManage
 
         def perform(task_id)
           return unless setup_task(task_id)
-          server = Models::Server[@task.parse_params['id']]
-          return unless server
-          instance = server.instance
-          server.update(:state => instance.state)
+          @server = Models::Server[@task.parse_params['id']]
+          return unless @server
+          instance = @server.instance
+          @server.update(:state => instance.state)
           if instance.actions.include?(:destroy)
-            retry_task unless server.client.destroy_instance(server.instance_id)
-            server.destroy
+            retry_task unless @server.client.destroy_instance(@server.instance_id)
+            @server.destroy
           elsif instance.actions.include?(:stop)
-            server.task_dispatcher(:stop)
+            @server.task_dispatcher(:stop)
           else
             retry_task
           end
           @task.change_state(:completed)
+        end
+
+        def retries_exhausted(worker, msg)
+          @server.log('Failed to destroy this server', 'ERROR')
+          @server.update(:state => 'STOPPED')
         end
 
       end

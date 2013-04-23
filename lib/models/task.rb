@@ -29,16 +29,7 @@ module CloudManage::Models
     end
 
     def parse_params
-      if !self.params.nil? and !self.params.empty?
-        begin
-          JSON::parse(self.params)
-        rescue
-          change_state(:error, "Wrong parameters (#{params})")
-          {}
-        end
-      else
-        {}
-      end
+      JSON::parse(self.params) rescue {}
     end
 
     def name

@@ -1,4 +1,3 @@
-
 namespace :db do
   desc 'Create initial database schema'
   task :create do
@@ -17,5 +16,11 @@ namespace :db do
     DB.tables.each do |t|
       DB.drop_table t
     end
+  end
+
+  desc 'Reset database'
+  task :reset do
+    Rake::Task["db:drop"].invoke
+    Rake::Task["db:create"].invoke
   end
 end

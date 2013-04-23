@@ -2,8 +2,7 @@ module CloudManage::Controllers
   class Accounts < Base
 
     post '/accounts' do
-      account_id = params['account'].delete('id')
-      if account_id
+      if account_id = params['account'].delete('id')
         account = Account[account_id].update(params['account'])
       else
         account = Account.new(params['account'])
@@ -41,12 +40,9 @@ module CloudManage::Controllers
     get '/accounts/:id/images' do
       account = Account[params[:id]]
       if params['q']
-        images = account.images_dataset.where(
-          Sequel.ilike(:description, "%#{params['q']}%") |
-          Sequel.ilike(:name, "%#{params['q']}%")
-        ).paginate(page, 25)
+        images = account.search(params['q']).paginate(page, 25)
       else
-        images = Image.where(:account_id => account.id).paginate(page, 25)
+        images = account.images_dataset.paginate(page, 25)
       end
       haml :'accounts/images', :locals => { :account => account, :images => images }
     end

@@ -29,6 +29,6 @@
           - if i.ready_for_launch?
             %a{ :class => 'btn btn-success', :href => url("/images/#{i.id}/launch") } Launch
           %a{ :class => 'btn', :href => url("/images/#{i.id}/edit") } Edit
-          %a{ :class => 'btn', :href => url("/images/#{i.id}/favorite?remove") } Remove
+          %a{ :class => 'btn btn-danger', :href => url("/images/#{i.id}/favorite?remove") } Remove
 
 = will_paginate images
