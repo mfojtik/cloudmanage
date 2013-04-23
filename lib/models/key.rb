@@ -13,10 +13,15 @@ module CloudManage::Models
       validates_presence [:username]
     end
 
+    def key_type
+      return :ssh_private if pem.include? 'RSA PRIVATE'
+      return :ssh_public if pem.include? 'ssh-rsa'
+    end
+
     def kind
-      return :ssh if password.nil?
-      return :ssh if password.empty?
-      return :password
+      return :password if !password.nil? and !password.empty?
+      return key_type if !pem.to_s.strip.empty?
+      :unknown
     end
 
     def self.create_or_update_key(create_opts={})

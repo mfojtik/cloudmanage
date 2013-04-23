@@ -20,6 +20,7 @@ module CloudManage
               if [:hostname, :ipv4].include?(address.type) and server.address != address.to_s
                 server.update_address(address)
               end
+              CloudManage::Workers::Server::MetricsWorker.perform_async(server.id)
             else
               server.update(:state => 'STOPPED')
             end

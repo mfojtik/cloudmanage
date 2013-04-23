@@ -79,6 +79,13 @@ module CloudManage
       DateTime    :updated_at
       DateTime    :created_at
     end
+    DB.create_table :metrics do
+      primary_key :id
+      column      :server_id,    :integer, :null => false, :index => true
+      String      :name,         :size => 25
+      String      :value,        :size => 100
+      DateTime    :created_at
+    end
     DB.create_table :events do
       primary_key :id
       Integer     :server_id,  :index => true

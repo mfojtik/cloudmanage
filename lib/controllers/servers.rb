@@ -25,6 +25,12 @@ module CloudManage::Controllers
       redirect back
     end
 
+    get '/servers/:id/connect' do
+      server = Server[params['id']]
+      server.task_dispatcher(:connect)
+      redirect(back)
+    end
+
     get '/servers/:id' do
       haml :'servers/show', :locals => { :server => Server[params[:id]] }
     end

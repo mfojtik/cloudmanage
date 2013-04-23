@@ -8,7 +8,8 @@ module CloudManage::Controllers
     end
 
     get '/keys/:id/edit' do
-      haml :'keys/new', :locals => { :account => key.account, :key => Key[params[:id]] }
+      key = Key[params[:id]]
+      haml :'keys/new', :locals => { :account => key.account, :key => key }
     end
 
     get '/accounts/:account_id/keys' do
