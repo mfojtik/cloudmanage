@@ -57,17 +57,17 @@ The application should be ready and running.
 Screenshots
 -------------
 
-![account](http://omicron.mifo.sk/account.png)
+![account](https://github.com/mfojtik/cloudmanage/master/screens/account.png)
 
-![images](http://omicron.mifo.sk/images.png)
+![images](https://github.com/mfojtik/cloudmanage/master/screens/images.png)
 
-![images2](http://omicron.mifo.sk/images2.png)
+![images2](https://github.com/mfojtik/cloudmanage/master/screens/images2.png)
 
-![recipe](http://omicron.mifo.sk/recipe.png)
+![recipe](https://github.com/mfojtik/cloudmanage/master/screens/recipe.png)
 
-![servers](http://omicron.mifo.sk/servers.png)
+![servers](https://github.com/mfojtik/cloudmanage/master/screens/servers.png)
 
-![server](http://omicron.mifo.sk/server.png)
+![server](https://github.com/mfojtik/cloudmanage/master/screens/server.png)
 
 License
 --------
