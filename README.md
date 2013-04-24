@@ -57,17 +57,17 @@ The application should be ready and running.
 Screenshots
 -------------
 
-![account](https://github.com/mfojtik/cloudmanage/master/screens/account.png)
+![account](https://raw.github.com/mfojtik/cloudmanage/master/screens/account.png)
 
-![images](https://github.com/mfojtik/cloudmanage/master/screens/images.png)
+![images](https://raw.github.com/mfojtik/cloudmanage/master/screens/images.png)
 
-![images2](https://github.com/mfojtik/cloudmanage/master/screens/images2.png)
+![images2](https://raw.github.com/mfojtik/cloudmanage/master/screens/images2.png)
 
-![recipe](https://github.com/mfojtik/cloudmanage/master/screens/recipe.png)
+![recipe](https://raw.github.com/mfojtik/cloudmanage/master/screens/recipe.png)
 
-![servers](https://github.com/mfojtik/cloudmanage/master/screens/servers.png)
+![servers](https://raw.github.com/mfojtik/cloudmanage/master/screens/servers.png)
 
-![server](https://github.com/mfojtik/cloudmanage/master/screens/server.png)
+![server](https://raw.github.com/mfojtik/cloudmanage/master/screens/server.png)
 
 License
 --------
