@@ -1,0 +1,6 @@
+%h2="#{recipe.name} recipe"
+
+.pull-right
+  %a{ :class => 'btn', :href => url("/recipes/#{recipe.id}/edit") } Edit
+
+- show_model(recipe)

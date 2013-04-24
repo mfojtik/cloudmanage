@@ -20,6 +20,7 @@ module CloudManage
           if [:hostname, :ipv4].include?(address.type)
             server.update_address(address)
             @task.change_state(:completed)
+            server.task_dispatcher(:recipe)
           else
             server.log("Server does not receive IP address yet")
             retry_task

@@ -17,6 +17,7 @@ require_relative './workers/server/destroy_worker'
 require_relative './workers/server/running_worker'
 require_relative './workers/server/connect_worker'
 require_relative './workers/server/metrics_worker'
+require_relative './workers/server/recipe_worker'
 
 # Account workers:
 #

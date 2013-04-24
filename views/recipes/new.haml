@@ -1,0 +1,20 @@
+%h2 New Recipe
+
+- form_for recipe, '/recipes' do
+  - control_header 'Recipe details'
+
+  - control_group 'Name' do
+    - input :text, :name
+
+  - control_group :body, 'Shell script' do
+    - text :body
+
+%script{:type => 'text/javascript', :src => '/js/codemirror.js'}
+%script{:type => 'text/javascript', :src => '/js/matchbrackets.js'}
+%script{:type => 'text/javascript', :src => '/js/shell.js'}
+:javascript
+    var editor = CodeMirror.fromTextArea(document.getElementById('body'), {
+      mode: 'shell',
+      lineNumbers: true,
+      matchBrackets: true
+    });

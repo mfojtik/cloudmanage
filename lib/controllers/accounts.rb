@@ -34,6 +34,7 @@ module CloudManage::Controllers
 
     get '/accounts/:id/populate' do
       Account[params[:id]].task_dispatcher(params.keys.first)
+      flash[:notice] = "Populating #{params.keys.first}"
       redirect back
     end
 

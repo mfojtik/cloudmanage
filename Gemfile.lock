@@ -185,6 +185,7 @@ DEPENDENCIES
   haml
   json
   json_pure
+  net-scp
   net-ssh
   nokogiri
   pg

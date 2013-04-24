@@ -8,5 +8,6 @@ module CloudManage
     require_relative './controllers/keys'
     require_relative './controllers/servers'
     require_relative './controllers/events'
+    require_relative './controllers/recipes'
   end
 end

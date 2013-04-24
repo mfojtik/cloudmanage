@@ -36,15 +36,27 @@ module CloudManage
     end
     DB.create_table :resources do
       primary_key :id
-      Integer     :account_id,    :null => false, :index => true
+      foreign_key :account_id, :accounts
       String      :kind,          :null => false, :size => 255, :index => true
       String      :resource_id,   :null => false, :size => 255
       String      :name,          :null => false, :size => 255
     end
+    DB.create_table :keys do
+      primary_key :id
+      foreign_key :account_id, :accounts
+      String      :name,          :size => 255
+      String      :pem
+      String      :username,      :size => 255, :default => 'root'
+      String      :password,      :size => 255
+      String      :cmd
+      String      :backend_id,    :size => 10
+      DateTime    :updated_at
+      DateTime    :created_at
+    end
     DB.create_table :images do
       primary_key :id
-      Integer     :account_id,    :null => false, :index => true
-      Integer     :key_id
+      foreign_key :account_id, :accounts
+      foreign_key :key_id,     :keys
       String      :name,          :null => false, :size => 255
       String      :image_id,      :null => false, :unique => true, :size => 255
       String      :hwp_id,        :default => '', :size => 255
@@ -58,22 +70,10 @@ module CloudManage
       DateTime    :updated_at
       DateTime    :created_at
     end
-    DB.create_table :keys do
-      primary_key :id
-      column      :account_id,    :integer, :null => false, :index => true
-      String      :name,          :size => 255
-      String      :pem
-      String      :username,      :size => 255, :default => 'root'
-      String      :password,      :size => 255
-      String      :cmd
-      String      :backend_id,    :size => 10
-      DateTime    :updated_at
-      DateTime    :created_at
-    end
     DB.create_table :servers do
       primary_key :id
+      foreign_key :image_id,      :images
       String      :instance_id,   :size => 255, :index => true
-      Integer     :image_id,      :null => false, :index => true
       String      :state,         :default => 'new', :size => 64
       String      :address,       :size => 255
       DateTime    :updated_at
@@ -81,21 +81,24 @@ module CloudManage
     end
     DB.create_table :metrics do
       primary_key :id
-      column      :server_id,    :integer, :null => false, :index => true
+      foreign_key :server_id,    :servers
       String      :name,         :size => 25
       String      :value,        :size => 100
       DateTime    :created_at
     end
-    DB.create_table :events do
+    DB.create_table :recipes do
       primary_key :id
-      Integer     :server_id,  :index => true
-      Integer     :account_id, :index => true
-      Integer     :key_id,     :index => true
-      Integer     :image_id,   :index => true
-      Integer     :task_id,    :index => true
-      String      :severity,   :default => 'INFO', :null => false, :size => 10
-      String      :message
+      foreign_key :server_id,    :servers
+      column      :parent_id,    :integer, :index => true
+      String      :name,         :size => 255, :null => false
+      String      :body
       DateTime    :created_at
+      DateTime    :updated_at
+    end
+    DB.create_table :recipes_servers do
+      primary_key :id
+      foreign_key :server_id,    :servers
+      foreign_key :recipe_id,    :recipes
     end
     DB.create_table :tasks do
       primary_key :id
@@ -103,6 +106,17 @@ module CloudManage
       String      :worker_klass,  :null => false, :size => 64, :index => true
       String      :params
       String      :state,      :null => false, :default => 'NEW', :size => 32
+      DateTime    :created_at
+    end
+    DB.create_table :events do
+      primary_key :id
+      foreign_key :server_id,  :servers
+      foreign_key :account_id, :accounts
+      foreign_key :key_id,     :keys
+      foreign_key :image_id,   :images
+      foreign_key :task_id,    :tasks
+      String      :severity,   :default => 'INFO', :null => false, :size => 10
+      String      :message
       DateTime    :created_at
     end
   end

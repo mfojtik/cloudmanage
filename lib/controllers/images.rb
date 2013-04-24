@@ -24,7 +24,7 @@ module CloudManage::Controllers
     end
 
     get '/images/:id/launch' do
-      haml :'images/launch', :locals => { :image => Image[params[:id]] }
+      haml :'images/launch', :locals => { :image => Image[params[:id]], :recipes => Recipe.all }
     end
 
     get '/images/:id/favorite' do

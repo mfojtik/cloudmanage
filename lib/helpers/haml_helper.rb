@@ -44,7 +44,7 @@ module CloudManage
       end
     end
 
-    def form_for(model, action_url, &block)
+    def form_for(model, action_url, opts={}, &block)
       @model = model
       @model_name = @model.class.table_name.to_s.singularize
       haml_tag :form, :class => 'form-horizontal', :method => :post, :action => action_url do
@@ -55,12 +55,12 @@ module CloudManage
           block.call if block_given?
           haml_tag :div, :class => 'control-group' do
             haml_tag :div, :class => 'controls' do
-              haml_tag :button, :type => :submit do
+              haml_tag :button, :type => :submit, :class => 'btn btn-primary' do
                 submit_label = model.new? ? 'Create' : 'Save'
                 haml_concat submit_label
               end
             end
-          end
+          end if opts[:submit].nil?
         end
       end
     end
@@ -92,8 +92,8 @@ module CloudManage
     end
 
     def text(attr_name)
-      haml_tag :textarea, :name => "#{@model_name}[#{attr_name}]" do
-        haml_concat @model.send(attr_name)
+      haml_tag :textarea, :<, :name => "#{@model_name}[#{attr_name}]", :id => attr_name do
+        haml_concat @model.send(attr_name).to_s.strip
       end
     end
 

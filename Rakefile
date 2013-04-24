@@ -13,7 +13,7 @@ namespace :db do
   desc 'Clean database'
   task :drop do
     require_relative './lib/cloud_manage'
-    DB.tables.each do |t|
+    DB.tables.reverse.each do |t|
       DB.drop_table t
     end
   end

@@ -5,8 +5,11 @@ module CloudManage::Controllers
       haml :'servers/index', :locals => { :servers => Server.dataset.paginate(page, 25) }
     end
 
-    get '/servers/new' do
-      server = Server.create(:image_id => params[:image_id])
+    post '/servers' do
+      server = Server.create(:image_id => params['image']['id'])
+      params['recipe'].each { |recipe_id, val|
+        server.add_recipe(Recipe[recipe_id]) if val == 'on'
+      }
       server.task_dispatcher(:deploy)
       flash[:notice] = "Server ##{server.id} deployment initiated."
       redirect url("/servers")

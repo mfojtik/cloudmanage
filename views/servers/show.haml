@@ -5,6 +5,16 @@
 
 - show_model(server)
 
+%h3 Recipes
+
+%table.table.table-striped.table-bordered
+  %tbody
+    - server.recipes.each do |r|
+      %tr
+        %td
+          %a{ :href => "/recipes/#{r.id}"}=r.name
+
+
 %h3 Events
 
 %table.table.table-striped.table-bordered

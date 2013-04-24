@@ -18,6 +18,7 @@ module CloudManage
     use CloudManage::Controllers::Keys
     use CloudManage::Controllers::Servers
     use CloudManage::Controllers::Events
+    use CloudManage::Controllers::Recipes
 
     get '/' do
       redirect url("/accounts")

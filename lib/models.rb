@@ -7,7 +7,7 @@ module CloudManage
 
       # Load Sequel Models
       #
-      [:account, :image, :key, :server, :event, :task, :resource, :metric].each do |t|
+      [:account, :image, :key, :server, :event, :task, :resource, :metric, :recipe].each do |t|
         require_relative "./models/#{t}"
       end
     end

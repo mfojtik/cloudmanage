@@ -11,8 +11,10 @@ module CloudManage::Models
     one_to_many :events
     one_to_many :metrics
 
+    many_to_many :recipes
+
     plugin :association_dependencies,
-      :events => :delete
+      :events => :delete, :metrics => :delete, :recipes => :delete
 
     def update_address(new_address)
       if self.address != new_address

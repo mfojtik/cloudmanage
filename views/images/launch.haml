@@ -2,24 +2,38 @@
 
 %h4 Server Details
 
-
-
 %table.table.table-striped.table-bordered.summary
   %tbody
-    %tr
-      %th Image
-      %td
-        %a{:href => url("/images/#{image.id}")}=image.name
-        %span.muted=" (#{image.description})"
     %tr
       %th Account
       %td
         %a{:href => url("/accounts/#{image.account.id}")}=image.account.name
     %tr
+      %th Image
+      %td
+        %span.muted="#{image.description}"
+        %a{:href => url("/images/#{image.id}")}="(#{image.description})"
+    %tr
+      %th Profile
+      %td
+        %span.muted=image.hwp_id
+
+    - unless image.realm_id.empty?
+      %tr
+        %th Location
+        %td
+          %span.muted=image.realm_id
+
+    - unless image.firewall_id.empty?
+      %tr
+        %th Firewall
+        %td
+          %span.muted=image.firewall_id
+    %tr
       %th Authentication Method
       %td
-        ="#{image.key.kind}:#{image.key.username}@"
-        - if image.key.kind == :ssh
+        %span.muted="#{image.key.kind}:#{image.key.username}@"
+        - if image.key.kind.to_s =~ /^ssh/
           %a{ :href => url("/keys/#{image.key.id}")}=image.key.name
         - else
           = image.key.password
@@ -31,15 +45,13 @@
         - else
           %span.label.label-info PENDING
 
-%p.pull-right
-  %a{ :class => 'btn btn-success', :href => url("/servers/new?image_id=#{image.id}") } Continue
+%h4 Assign Recipes
 
-%br
+- form_for image, '/servers', :submit => false do
+  %label.checkbox
+    - recipes.each do |r|
+      %input{ :type => :checkbox, :name => "recipe[#{r.id}]"}=r.name
 
-%h4 Deltacloud Command
+  %p.pull-right
+    %button{ :type => :submit, :class => 'btn btn-success' } Continue
 
-%pre
-  %code="$ curl -X POST --user '#{image.account.username}:#{image.account.password}' \\"
-  %code="-H 'X-Deltacloud-Driver: #{image.account.driver}'\\"
-  %code="-H 'Accept: application/xml'\\"
-  %code="#{image.account.client.connection.build_url('',image.create_instance_args.last.merge(:image_id => image.create_instance_args.first))}"

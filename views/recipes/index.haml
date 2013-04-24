@@ -1,0 +1,24 @@
+%h3 Recipes
+
+%p{ :class => 'pull-right'}
+  %a{ :class => 'btn', :href => "/recipes/new" } Add Recipe
+
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th Name
+      %th Servers
+      %th Created
+      %td
+  %tbody
+    - recipes.each do |r|
+      %tr
+        %td
+          %a{ :href => url("/recipes/#{r.id}")}=r.name
+        %td=0
+        %td
+          %small
+            - time_ago(r.created_at)
+        %td
+          %a{ :class => 'btn', :href => url("/recipes/#{r.id}/edit") } Edit
+          %a{ :class => 'btn btn-danger', :href => url("/recipes/#{r.id}/destroy") } Delete
