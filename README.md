@@ -4,7 +4,7 @@ CloudManage
 What it is?
 ---------------------
 
-CloudManage is a very minimal tool that helps you manage servers in IaaS clouds.
+CloudManage (name tbd ;) is a very minimal tool that helps you manage servers in IaaS clouds.
 It has minimal UI that will guide you from adding your favorite cloud provider
 account to a running provisioned server.
 
