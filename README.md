@@ -65,6 +65,8 @@ Screenshots
 
 ![recipe](https://raw.github.com/mfojtik/cloudmanage/master/screens/recipe.png)
 
+![launch](https://raw.github.com/mfojtik/cloudmanage/master/screens/launch.png)
+
 ![servers](https://raw.github.com/mfojtik/cloudmanage/master/screens/servers.png)
 
 ![server](https://raw.github.com/mfojtik/cloudmanage/master/screens/server.png)
