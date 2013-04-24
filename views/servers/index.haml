@@ -29,7 +29,6 @@
             %a{ :class => 'btn-danger btn', :href => "/servers/#{s.id}/destroy?force=1" } Force Delete
           - else
             %a{ :class => 'btn-danger btn', :href => "/servers/#{s.id}/destroy" } Stop
-            %a{ :class => 'btn', :href => "/servers/#{s.id}/connect" } Connect
 
 
 - pagination(servers, "/servers")

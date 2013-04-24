@@ -14,7 +14,12 @@ module CloudManage::Models
     many_to_many :recipes
 
     plugin :association_dependencies,
-      :events => :delete, :metrics => :delete, :recipes => :delete
+      :events => :delete, :metrics => :delete
+
+    def before_destroy
+      DB[:recipes_servers].filter(:server_id => self.id).delete
+      super
+    end
 
     def update_address(new_address)
       if self.address != new_address
@@ -50,15 +55,22 @@ module CloudManage::Models
     end
 
     def console_opts
-      return { :password => image.key.password } if image.key.kind == :password
+      retval = console_default_opts
+      if image.key.kind == :password
+        return retval.merge(:password => image.key.password)
+      end
       if image.key.kind == :ssh_public
         key_filename = File.join('/', 'tmp', "server_#{self.id}.key")
         File.open(key_filename, "w", 0600) { |f| f.write(image.key.pem) }
-        return { :keys => [key_filename], :keys_only => true }
+        return retval.merge(:keys => [key_filename], :keys_only => true)
       end
       if image.key.kind == :ssh_private
-        return { :key_data => [private_key], :keys_only => true }
+        return retval.merge(:key_data => [private_key], :keys_only => true)
       end
+    end
+
+    def console_default_opts
+      { :verbose => :info, :logger => Logger.new($stdout), :compression => true }
     end
 
   end

@@ -9,7 +9,7 @@ module CloudManage::Controllers
       server = Server.create(:image_id => params['image']['id'])
       params['recipe'].each { |recipe_id, val|
         server.add_recipe(Recipe[recipe_id]) if val == 'on'
-      }
+      } if params['recipe']
       server.task_dispatcher(:deploy)
       flash[:notice] = "Server ##{server.id} deployment initiated."
       redirect url("/servers")
